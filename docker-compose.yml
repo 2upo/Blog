@@ -7,7 +7,7 @@ services:
         environment:
             - MONGO_DSN=mongodb://Buba:boba22@mongodb
             - MONGO_DB=BLOG
-            - SERVER_DSN=localhost:5000
+            - SERVER_DSN=0.0.0.0:5000
         ports:
             - 5000:5000
         depends_on:

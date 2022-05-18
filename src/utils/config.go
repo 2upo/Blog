@@ -21,7 +21,7 @@ func Config() *Configuration {
 		configuration = Configuration{
 			Dsn:       os.Getenv("MONGO_DSN"),
 			DBName:    os.Getenv("MONGO_DB"),
-			ServerDsn: os.Getenv("Server_DSN"),
+			ServerDsn: os.Getenv("SERVER_DSN"),
 		}
 	})
 	return &configuration
