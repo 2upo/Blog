@@ -1,4 +1,4 @@
-package middleware
+package auth
 
 import (
 	"blog/user"
@@ -15,11 +15,11 @@ func InitJWT() *jwt.GinJWTMiddleware {
 		Key:         []byte("secret key"),
 		Timeout:     time.Hour,
 		MaxRefresh:  time.Hour,
-		IdentityKey: user.IdentityKey,
+		IdentityKey: IdentityKey,
 		PayloadFunc: func(data interface{}) jwt.MapClaims {
 			if v, ok := data.(*user.User); ok {
 				return jwt.MapClaims{
-					user.IdentityKey: v.UserName,
+					IdentityKey: v.UserName,
 				}
 			}
 			return jwt.MapClaims{}
@@ -27,11 +27,11 @@ func InitJWT() *jwt.GinJWTMiddleware {
 		IdentityHandler: func(c *gin.Context) interface{} {
 			claims := jwt.ExtractClaims(c)
 			return &user.User{
-				UserName: claims[user.IdentityKey].(string),
+				UserName: claims[IdentityKey].(string),
 			}
 		},
 		Authenticator: func(c *gin.Context) (interface{}, error) {
-			var loginVals user.Login
+			var loginVals Login
 			if err := c.ShouldBind(&loginVals); err != nil {
 				return "", jwt.ErrMissingLoginValues
 			}
