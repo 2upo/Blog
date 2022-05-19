@@ -17,7 +17,7 @@ func InitJWT() *jwt.GinJWTMiddleware {
 		MaxRefresh:  time.Hour,
 		IdentityKey: user.IdentityKey,
 		PayloadFunc: func(data interface{}) jwt.MapClaims {
-			if v, ok := data.(user.User); ok {
+			if v, ok := data.(*user.User); ok {
 				return jwt.MapClaims{
 					user.IdentityKey: v.UserName,
 				}
@@ -26,7 +26,7 @@ func InitJWT() *jwt.GinJWTMiddleware {
 		},
 		IdentityHandler: func(c *gin.Context) interface{} {
 			claims := jwt.ExtractClaims(c)
-			return user.User{
+			return &user.User{
 				UserName: claims[user.IdentityKey].(string),
 			}
 		},
@@ -39,7 +39,7 @@ func InitJWT() *jwt.GinJWTMiddleware {
 			password := loginVals.Password
 
 			if (userID == "admin" && password == "admin") || (userID == "test" && password == "test") {
-				return user.User{
+				return &user.User{
 					UserName:  userID,
 					LastName:  "Bo-Yi",
 					FirstName: "Wu",
@@ -49,7 +49,7 @@ func InitJWT() *jwt.GinJWTMiddleware {
 			return nil, jwt.ErrFailedAuthentication
 		},
 		Authorizator: func(data interface{}, c *gin.Context) bool {
-			if v, ok := data.(user.User); ok && v.UserName == "admin" {
+			if v, ok := data.(*user.User); ok && v.UserName == "admin" {
 				return true
 			}
 
