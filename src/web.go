@@ -9,6 +9,10 @@ import (
 )
 
 func InitApp() *gin.Engine {
+	db := utils.Db()
+	defer utils.CloseClient(10)
+	log.Printf("Instantiated db: %v", db.Client())
+
 	app := gin.New()
 	app.Use(gin.Recovery())
 

@@ -1,14 +1,14 @@
 package router
 
 import (
-	"blog/middleware"
+	"blog/auth"
 
 	"github.com/gin-gonic/gin"
 )
 
 func InitRoutes(baseGroup *gin.RouterGroup) {
 
-	authMiddleware := middleware.InitJWT()
+	authMiddleware := auth.InitJWT()
 
 	baseGroup.GET("healthcheck", healthcheck)
 	baseGroup.POST("/login", authMiddleware.LoginHandler)
