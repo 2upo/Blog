@@ -8,7 +8,6 @@ import (
 	"github.com/gin-gonic/gin"
 
 	"go.mongodb.org/mongo-driver/bson"
-	"go.mongodb.org/mongo-driver/bson/primitive"
 	"go.mongodb.org/mongo-driver/mongo"
 )
 
@@ -29,53 +28,31 @@ func ClearDb(collections []*mongo.Collection) {
 	}
 }
 
-func newUser(header string, userCollection *mongo.Collection) (*mongo.InsertOneResult, error) {
-
+func newUser(userName string, userCollection *mongo.Collection) (*mongo.InsertOneResult, error) {
 	ctx, cancel := context.WithTimeout(context.Background(), 5*time.Second)
 	defer cancel()
 
 	res, err := userCollection.InsertOne(ctx, bson.D{
-		{"userName", header},
-		{"content", "Sample content"},
-		{"createdat", int(time.Now().Unix())},
-		{"answers", []bson.D{
-			bson.D{
-				{"nextstate", "default"},
-				{"content", "sample content"},
-			},
-			bson.D{
-				{"nextstate", "default"},
-				{"content", "sample content"},
-			},
-		}},
+		{"userName", userName},
+		{"firstName", "dada"},
+		{"lastName", "yaya"},
 	})
 	return res, err
 }
 
-func NewUser(chatId string, userCollection *mongo.Collection) (*mongo.InsertOneResult, error) {
-	ctx, cancel := context.WithTimeout(context.Background(), 5*time.Second)
-	defer cancel()
+func SetupStateCollection(userCollection *mongo.Collection) []*mongo.InsertOneResult {
 
-	res, err := userCollection.InsertOne(ctx, bson.D{
-		{"chatid", chatId},
-		{"currentstate", primitive.NewObjectID()},
-	})
-	return res, err
-}
-
-func SetupStateCollection(stateCollection *mongo.Collection) []*mongo.InsertOneResult {
-
-	state1, err := newState("state1", stateCollection)
+	state1, err := newUser("Vlad", userCollection)
 	if err != nil {
 		log.Fatal(err)
 	}
 
-	state2, err := newState("state2", stateCollection)
+	state2, err := newUser("Denis", userCollection)
 	if err != nil {
 		log.Fatal(err)
 	}
 
-	state3, err := newState("state3", stateCollection)
+	state3, err := newUser("Pens", userCollection)
 	if err != nil {
 		log.Fatal(err)
 	}
