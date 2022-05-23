@@ -1,6 +1,7 @@
 package router
 
 import (
+	"blog/auth"
 	"blog/user"
 
 	jwt "github.com/appleboy/gin-jwt/v2"
@@ -9,9 +10,9 @@ import (
 
 func helloHandler(c *gin.Context) {
 	claims := jwt.ExtractClaims(c)
-	u, _ := c.Get(user.IdentityKey)
+	u, _ := c.Get(auth.IdentityKey)
 	c.JSON(200, gin.H{
-		"userID":   claims[user.IdentityKey],
+		"userID":   claims[auth.IdentityKey],
 		"userName": u.(*user.User).UserName,
 		"text":     "Hello World.",
 	})

@@ -7,7 +7,6 @@ import (
 
 	"go.mongodb.org/mongo-driver/bson"
 	"go.mongodb.org/mongo-driver/mongo"
-	"go.mongodb.org/mongo-driver/mongo/options"
 )
 
 type UserService struct {
@@ -15,30 +14,30 @@ type UserService struct {
 }
 
 // Constructor
-func InitStateService() *UserService {
-	var stateService UserService
-	stateService.Collection = utils.Db().Collection("users")
+func InitUserService() *UserService {
+	var userService UserService
+	userService.Collection = utils.Db().Collection("users")
 
-	return &stateService
+	return &userService
 }
 
 func (service *UserService) GetUserName(userName string) (*User, error) {
-	var state User
+	var name User
 
 	ctx, cancel := context.WithTimeout(context.Background(), 3*time.Second)
 	defer cancel()
 
-	err := service.Collection.FindOne(ctx, bson.M{"chatid": userName}).Decode(&state)
+	err := service.Collection.FindOne(ctx, bson.M{"userName": userName}).Decode(&name)
 
-	return &state, err
+	return &name, err
 }
 
-func (service *UserService) Upsert(user *User) error {
-	ctx, cancel := context.WithTimeout(context.Background(), 3*time.Second)
+func (service *UserService) Insert(user *User) error {
+	ctx, cancel := context.WithTimeout(context.Background(), 5*time.Second)
 	defer cancel()
 
-	opts := options.Replace().SetUpsert(true)
-	_, err := service.Collection.ReplaceOne(ctx, bson.D{{"userName", user.UserName}}, user, opts)
+	_, err := service.Collection.InsertOne(ctx, user)
 
 	return err
+
 }
