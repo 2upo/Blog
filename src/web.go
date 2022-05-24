@@ -10,7 +10,6 @@ import (
 
 func InitApp() *gin.Engine {
 	db := utils.Db()
-	defer utils.CloseClient(10)
 	log.Printf("Instantiated db: %v", db.Client())
 
 	app := gin.New()
@@ -28,6 +27,7 @@ func RunServer() {
 	config := utils.Config()
 
 	app := InitApp()
+	defer utils.CloseClient(10)
 
 	log.Println("Starting server...")
 

@@ -13,13 +13,27 @@ import (
 
 var userService = InitUserService()
 
+func TestGetUserByName(t *testing.T) {
+	ass := assert.New(t)
+
+	tests.SetupUserCollection(userService.Collection) // Set up
+
+	user, err := userService.GetUserByName("Vlad")
+
+	ass.Nil(err)
+	ass.Equal(user.UserName, "Vlad")
+
+	tests.ClearDb([]*mongo.Collection{userService.Collection}) // Tear down
+}
+
 func TestInsert(t *testing.T) {
 	ass := assert.New(t)
 
-	new_user := User{
+	new_user := RegisterSchema{
 		UserName:  "testuserName",
 		FirstName: "testuserFirst",
 		LastName:  "testuserLast",
+		Password:  "testPass",
 	}
 
 	err := userService.Insert(&new_user)

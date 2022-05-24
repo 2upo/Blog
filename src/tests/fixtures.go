@@ -40,28 +40,28 @@ func newUser(userName string, userCollection *mongo.Collection) (*mongo.InsertOn
 	return res, err
 }
 
-func SetupStateCollection(userCollection *mongo.Collection) []*mongo.InsertOneResult {
+func SetupUserCollection(userCollection *mongo.Collection) []*mongo.InsertOneResult {
 
-	state1, err := newUser("Vlad", userCollection)
+	user1, err := newUser("Vlad", userCollection)
 	if err != nil {
 		log.Fatal(err)
 	}
 
-	state2, err := newUser("Denis", userCollection)
+	user2, err := newUser("Denis", userCollection)
 	if err != nil {
 		log.Fatal(err)
 	}
 
-	state3, err := newUser("Pens", userCollection)
+	user3, err := newUser("Pens", userCollection)
 	if err != nil {
 		log.Fatal(err)
 	}
 
-	log.Println(state3.InsertedID)
+	log.Println(user1.InsertedID)
 
 	// Example how to obtain state id:
 	// id := res.InsertedID
-	return []*mongo.InsertOneResult{state1, state2, state3}
+	return []*mongo.InsertOneResult{user1, user2, user3}
 }
 
 func InitApp() *gin.Engine {

@@ -21,7 +21,7 @@ func InitUserService() *UserService {
 	return &userService
 }
 
-func (service *UserService) GetUserName(userName string) (*User, error) {
+func (service *UserService) GetUserByName(userName string) (*User, error) {
 	var name User
 
 	ctx, cancel := context.WithTimeout(context.Background(), 3*time.Second)
@@ -32,11 +32,13 @@ func (service *UserService) GetUserName(userName string) (*User, error) {
 	return &name, err
 }
 
-func (service *UserService) Insert(user *User) error {
+func (service *UserService) Insert(user *RegisterSchema) error {
 	ctx, cancel := context.WithTimeout(context.Background(), 5*time.Second)
 	defer cancel()
 
-	_, err := service.Collection.InsertOne(ctx, user)
+	new_user := User(*user)
+
+	_, err := service.Collection.InsertOne(ctx, new_user)
 
 	return err
 
